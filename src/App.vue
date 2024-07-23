@@ -5,4 +5,10 @@
   </div>
 </template>
 
+<script>
+import request from '@/utils/request'
+request({})
+export default {}
+</script>
+
 <style lang="scss"></style>
