@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Course from '@/views/course/index.vue'
+import store from '@/store'
 
 Vue.use(VueRouter)
 
@@ -18,12 +19,14 @@ const routes = [
   {
     path: '/learn',
     name: 'learn',
-    component: () => import(/* webpackChunkName: 'learn' */'@/views/learn/index.vue')
+    component: () => import(/* webpackChunkName: 'learn' */'@/views/learn/index.vue'),
+    meta: { requiresAuth: true }
   },
   {
     path: '/user',
     name: 'user',
-    component: () => import(/* webpackChunkName: 'user' */'@/views/user/index.vue')
+    component: () => import(/* webpackChunkName: 'user' */'@/views/user/index.vue'),
+    meta: { requiresAuth: true }
   },
   {
     path: '*',
@@ -34,6 +37,22 @@ const routes = [
 
 const router = new VueRouter({
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!store.state.user) {
+      return next({
+        name: 'login',
+        query: {
+          redirect: to.fullPath
+        }
+      })
+    }
+    next()
+  } else {
+    next()
+  }
 })
 
 export default router
