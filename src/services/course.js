@@ -15,3 +15,10 @@ export const getQueryCourses = data => {
     data
   })
 }
+
+export const getPurchaseCourse = () => {
+  return request({
+    method: 'GET',
+    url: '/front/course/getPurchaseCourse'
+  })
+}

@@ -6,16 +6,24 @@
       <van-swipe-item>3</van-swipe-item>
       <van-swipe-item>4</van-swipe-item>
     </van-swipe>
-    <course-content-list></course-content-list>
+    <course-content-list
+      :fetch-data="fetchData"
+    ></course-content-list>
   </div>
 </template>
 
 <script>
-import CourseContentList from './CourseContentList.vue'
+import CourseContentList from '@/components/CourseContentList.vue'
+import { getQueryCourses } from '@/services/course'
 export default {
   name: 'course-content',
   components: {
     CourseContentList
+  },
+  methods: {
+    fetchData (options) {
+      return getQueryCourses(options)
+    }
   }
 }
 </script>

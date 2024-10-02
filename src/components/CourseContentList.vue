@@ -7,12 +7,12 @@
       <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
         <van-cell v-for="item in list" :key="item.id">
           <div>
-            <img :src="item.courseImgUrl">
+            <img :src="item.courseImgUrl || item.image">
           </div>
           <div class="course-info">
-            <h3 v-text="item.courseName"></h3>
+            <h3 v-text="item.courseName || item.name"></h3>
             <p class="course-preview" v-html="item.previewFirstField"></p>
-            <p class="price-container">
+            <p v-if="item.price" class="price-container">
               <span class="course-discounts">${{ item.discounts }}</span>
               <s class="course-price">${{ item.price }}</s>
             </p>
@@ -25,9 +25,14 @@
 </template>
 
 <script>
-import { getQueryCourses } from '@/services/course'
 export default {
   name: 'course-content-list',
+  props: {
+    fetchData: {
+      type: Function,
+      required: true
+    }
+  },
   data () {
     return {
       list: [],
@@ -40,19 +45,21 @@ export default {
   methods: {
     async onRefresh () {
       this.currentPage = 1
-      const { data } = await getQueryCourses({
+      const { data } = await this.fetchData({
         currentPage: this.currentPage,
         pageSize: 10,
         status: 1
       })
       if (data.data && data.data.records && data.data.records.length !== 0) {
         this.list = data.data.records
+      } else if (data.content && data.content.length !== 0) {
+        this.list = data.content
       }
       this.$toast('刷新成功')
       this.isRefreshing = false
     },
     async onLoad () {
-      const { data } = await getQueryCourses({
+      const { data } = await this.fetchData({
         currentPage: this.currentPage,
         pageSize: 10,
         status: 1
@@ -60,10 +67,14 @@ export default {
       console.log(data)
       if (data.data && data.data.records && data.data.records.length !== 0) {
         this.list.push(...data.data.records)
+      } else if (data.content && data.content.length !== 0) {
+        this.list.push(...data.content)
       }
       this.currentPage++
       this.loading = false
-      if (data.data.records.length < 10) {
+      if (data.data && data.data.records && data.data.records.length < 10) {
+        this.finished = true
+      } else if (data.content && data.content.length < 10) {
         this.finished = true
       }
     }
