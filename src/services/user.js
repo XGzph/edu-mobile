@@ -7,3 +7,10 @@ export const login = data => {
     data: new URLSearchParams(data).toString()
   })
 }
+
+export const getInfo = () => {
+  return request({
+    method: 'GET',
+    url: '/front/user/getInfo'
+  })
+}
