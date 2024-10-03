@@ -1,6 +1,6 @@
 <template>
   <div class="course-info">
-    <van-cell-group>
+    <van-cell-group :style="styleOptions">
       <van-cell class="ourse-img">
         <img :src="course.courseImgUrl">
       </van-cell>
@@ -16,15 +16,36 @@
           <span class="tag">每周三、五更新</span>
         </div>
       </van-cell>
-      <van-cell class="course-detail"></van-cell>
+      <van-cell class="course-detail">
+        <van-tabs sticky swipeable>
+          <van-tab title="详情">
+            <div v-html="course.courseDescripton"></div>
+          </van-tab>
+          <van-tab title="内容">
+            <course-section v-for="item in sections" :key="item.id" :section-data="item"/>
+          </van-tab>
+        </van-tabs>
+      </van-cell>
     </van-cell-group>
+    <van-tabbar v-if="!course.isBuy">
+      <div class="price">
+        <span v-text="course.discountsTag"></span>
+        <span class="discounts">${{ course.discounts }}</span>
+        <span>${{ course.price }}</span>
+      </div>
+      <van-button type="primary">立即购买</van-button>
+    </van-tabbar>
   </div>
 </template>
 
 <script>
-import { getCourseById } from '@/services/course'
+import CourseSection from './components/CourseAndSection'
+import { getCourseById, getSectionAndLesson } from '@/services/course'
 export default {
   name: 'CourseInfo',
+  components: {
+    CourseSection
+  },
   props: {
     courseId: {
       type: [String, Number],
@@ -33,18 +54,30 @@ export default {
   },
   data () {
     return {
-      course: {}
+      course: {},
+      sections: {},
+      styleOptions: {}
     }
   },
   created () {
     this.loadCourse()
+    this.loadSections()
   },
   methods: {
+    async loadSections () {
+      const { data } = await getSectionAndLesson({
+        courseId: this.courseId
+      })
+      this.sections = data.content.courseSectionList
+    },
     async loadCourse () {
       const { data } = await getCourseById({
         courseId: this.courseId
       })
       this.course = data.content
+      if (data.content.isBuy) {
+        this.styleOptions.bottom = 0
+      }
     }
   }
 }
@@ -56,7 +89,6 @@ export default {
 }
 .course-img{
   height: 280px;
-  width: 100%;
 }
 .course-description{
   padding: 10px 20px;
@@ -72,7 +104,7 @@ export default {
   flex: 1;
   margin: 0;
 }
-.course-price .discounts{
+.discounts{
   color: #ff7452;
   font-size: 24px;
   font-weight: 700;
@@ -86,5 +118,27 @@ export default {
   padding: 7px;
   line-height: 15px;
   border-radius: 3px;
+}
+.van-cell-group {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  bottom: 50px;
+  overflow-y: auto;
+}
+.van-tabbar {
+  line-height: 50px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.price span{
+  font-style: 14px;
+}
+.van-button{
+  width: 50%;
+  height: 80%;
 }
 </style>
