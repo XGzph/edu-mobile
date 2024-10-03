@@ -5,7 +5,14 @@
       @refresh="onRefresh"
     >
       <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-        <van-cell v-for="item in list" :key="item.id">
+        <van-cell v-for="item in list" :key="item.id"
+          @click="$router.push({
+            name: 'course-info',
+            params: {
+              courseId: item.id
+            }
+          })"
+        >
           <div>
             <img :src="item.courseImgUrl || item.image">
           </div>

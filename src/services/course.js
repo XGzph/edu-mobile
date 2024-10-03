@@ -22,3 +22,11 @@ export const getPurchaseCourse = () => {
     url: '/front/course/getPurchaseCourse'
   })
 }
+
+export const getCourseById = params => {
+  return request({
+    method: 'GET',
+    url: '/front/course/getCourseById',
+    params
+  })
+}

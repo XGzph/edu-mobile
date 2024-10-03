@@ -29,6 +29,12 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/course-info/:courseId',
+    name: 'course-info',
+    component: () => import(/* webpackChunkName: 'course-info' */'@/views/course-info/index.vue'),
+    props: true
+  },
+  {
     path: '*',
     name: 'error',
     component: () => import(/* webpackChunkName: 'error' */'@/views/error/index.vue')

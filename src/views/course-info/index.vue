@@ -1,0 +1,90 @@
+<template>
+  <div class="course-info">
+    <van-cell-group>
+      <van-cell class="ourse-img">
+        <img :src="course.courseImgUrl">
+      </van-cell>
+      <van-cell class="couse-description">
+        <h2 v-text="course.courseName"></h2>
+        <p v-text="course.previewFirstField"></p>
+        <div class="course-sale-info">
+          <p class="course-price">
+            <span class="discounts">${{ course.discounts }}</span>
+            <span>${{ course.price }}</span>
+          </p>
+          <span class="tag">{{ course.sales }}人已购</span>
+          <span class="tag">每周三、五更新</span>
+        </div>
+      </van-cell>
+      <van-cell class="course-detail"></van-cell>
+    </van-cell-group>
+  </div>
+</template>
+
+<script>
+import { getCourseById } from '@/services/course'
+export default {
+  name: 'CourseInfo',
+  props: {
+    courseId: {
+      type: [String, Number],
+      required: true
+    }
+  },
+  data () {
+    return {
+      course: {}
+    }
+  },
+  created () {
+    this.loadCourse()
+  },
+  methods: {
+    async loadCourse () {
+      const { data } = await getCourseById({
+        courseId: this.courseId
+      })
+      this.course = data.content
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.van-cell{
+  padding: 0;
+}
+.course-img{
+  height: 280px;
+  width: 100%;
+}
+.course-description{
+  padding: 10px 20px;
+  height: 150px;
+}
+.course-description h2{
+  padding: 0;
+}
+.course-sale-info{
+  display: flex;
+}
+.course-sale-info course-price{
+  flex: 1;
+  margin: 0;
+}
+.course-price .discounts{
+  color: #ff7452;
+  font-size: 24px;
+  font-weight: 700;
+}
+.course-sale-info .tag{
+  background-color: #f8f9fa;
+  font-size: 12px;
+  font-weight: 700;
+  color: #666;
+  margin-left: 10px;
+  padding: 7px;
+  line-height: 15px;
+  border-radius: 3px;
+}
+</style>
