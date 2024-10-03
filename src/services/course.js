@@ -38,3 +38,11 @@ export const getSectionAndLesson = params => {
     params
   })
 }
+
+export const getVideoInfo = params => {
+  return request({
+    method: 'GET',
+    url: '/front/course/media/videoPlayInfo',
+    params
+  })
+}

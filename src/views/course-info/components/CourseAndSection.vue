@@ -1,7 +1,7 @@
 <template>
   <div class="course-section">
     <h2 class="section" v-text="sectionData.sectionName"></h2>
-    <p class="lesson" v-for="item in sectionData.courseLessons" :key="item.id">
+    <p class="lesson" v-for="item in sectionData.courseLessons" :key="item.id" @click="handleClick(item)">
       <span v-text="item.theme"></span>
       <van-ico name="play-circle" size="20" v-if="item.canPlay"></van-ico>
       <van-ico name="lock" size="20" v-else></van-ico>
@@ -16,6 +16,19 @@ export default {
     sectionData: {
       type: Object,
       required: true
+    }
+  },
+  methods: {
+    handleClick (lessonInfo) {
+      if (lessonInfo.canPlay) {
+        this.$router.push({
+          name: 'CourseSection',
+          params: {
+            type: Object,
+            required: true
+          }
+        })
+      }
     }
   }
 }

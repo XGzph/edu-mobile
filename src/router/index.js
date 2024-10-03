@@ -35,6 +35,12 @@ const routes = [
     props: true
   },
   {
+    path: '/lesson-video/:lessonId',
+    name: 'lesson-video',
+    component: () => import(/* webpackChunkName: 'lesson-video' */'@/views/course-info/video.vue'),
+    props: true
+  },
+  {
     path: '*',
     name: 'error',
     component: () => import(/* webpackChunkName: 'error' */'@/views/error/index.vue')
