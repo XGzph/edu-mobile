@@ -41,6 +41,13 @@ const routes = [
     props: true
   },
   {
+    path: '/pay/:courseId',
+    name: 'pay',
+    component: () => import(/* webpackChunkName: 'pay' */'@/views/pay/index.vue'),
+    meta: { requiresAuth: true },
+    props: true
+  },
+  {
     path: '*',
     name: 'error',
     component: () => import(/* webpackChunkName: 'error' */'@/views/error/index.vue')

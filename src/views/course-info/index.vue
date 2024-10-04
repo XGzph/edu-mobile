@@ -1,10 +1,10 @@
 <template>
   <div class="course-info">
     <van-cell-group :style="styleOptions">
-      <van-cell class="ourse-img">
+      <van-cell class="course-img">
         <img :src="course.courseImgUrl">
       </van-cell>
-      <van-cell class="couse-description">
+      <van-cell class="course-description">
         <h2 v-text="course.courseName"></h2>
         <p v-text="course.previewFirstField"></p>
         <div class="course-sale-info">
@@ -33,7 +33,7 @@
         <span class="discounts">${{ course.discounts }}</span>
         <span>${{ course.price }}</span>
       </div>
-      <van-button type="primary">立即购买</van-button>
+      <van-button type="primary" @click="handlePay">立即购买</van-button>
     </van-tabbar>
   </div>
 </template>
@@ -64,6 +64,23 @@ export default {
     this.loadSections()
   },
   methods: {
+    handlePay () {
+      if (this.$store.state.user) {
+        this.$router.push({
+          name: 'pay',
+          params: {
+            courseId: this.courseId
+          }
+        })
+      } else {
+        this.$router.push({
+          name: 'login',
+          query: {
+            redirect: this.$route.fullPath
+          }
+        })
+      }
+    },
     async loadSections () {
       const { data } = await getSectionAndLesson({
         courseId: this.courseId
